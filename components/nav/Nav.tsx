@@ -34,18 +34,16 @@ export default function Nav({ user }: { user: User | null }) {
           </Link>
           {user ? (
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="rounded-full outline-none focus-visible:ring-2 focus-visible:ring-brand">
-                  <Avatar className="w-8 h-8">
-                    <AvatarFallback className="bg-brand text-white text-sm font-medium">
-                      {user.email?.[0]?.toUpperCase() ?? 'U'}
-                    </AvatarFallback>
-                  </Avatar>
-                </button>
+              <DropdownMenuTrigger className="rounded-full outline-none focus-visible:ring-2 focus-visible:ring-brand">
+                <Avatar className="w-8 h-8">
+                  <AvatarFallback className="bg-brand text-white text-sm font-medium">
+                    {user.email?.[0]?.toUpperCase() ?? 'U'}
+                  </AvatarFallback>
+                </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="bg-zinc-900 border-white/10 text-white">
-                <DropdownMenuItem asChild>
-                  <Link href="/watchlist" className="flex items-center gap-2 cursor-pointer">
+                <DropdownMenuItem className="flex items-center gap-2 cursor-pointer">
+                  <Link href="/watchlist" className="flex items-center gap-2 w-full">
                     <Bookmark className="w-4 h-4" /> Watchlist
                   </Link>
                 </DropdownMenuItem>

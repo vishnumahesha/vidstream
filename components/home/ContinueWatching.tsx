@@ -29,7 +29,7 @@ export default function ContinueWatching() {
       .lt('progress', 0.95)
       .order('updated_at', { ascending: false })
       .limit(10)
-      .then(({ data }) => setItems((data ?? []) as Row[]))
+      .then(({ data }: { data: Row[] | null }) => setItems(data ?? []))
   }, [])
 
   if (items.length === 0) return null
