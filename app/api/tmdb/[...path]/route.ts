@@ -12,10 +12,12 @@ export async function GET(
   request.nextUrl.searchParams.forEach((value, key) => {
     url.searchParams.set(key, value)
   })
-  url.searchParams.set('api_key', process.env.TMDB_API_KEY!)
 
   const res = await fetch(url.toString(), {
-    headers: { Accept: 'application/json' },
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${process.env.TMDB_API_KEY}`,
+    },
     next: { revalidate: 3600 },
   })
 

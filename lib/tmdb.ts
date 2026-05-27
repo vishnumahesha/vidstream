@@ -95,9 +95,11 @@ async function tmdbFetch<T>(
   params: Record<string, string> = {}
 ): Promise<T> {
   const url = new URL(`${TMDB_BASE}/${path}`)
-  url.searchParams.set('api_key', process.env.TMDB_API_KEY!)
   Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v))
-  const res = await fetch(url.toString(), { next: { revalidate: 3600 } })
+  const res = await fetch(url.toString(), {
+    headers: { Authorization: `Bearer ${process.env.TMDB_API_KEY}` },
+    next: { revalidate: 3600 },
+  })
   if (!res.ok) throw new Error(`TMDB ${res.status}: ${path}`)
   return schema.parse(await res.json())
 }
