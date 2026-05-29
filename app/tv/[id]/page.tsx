@@ -32,15 +32,26 @@ export default async function TVPage({
   const { data: { user } } = await supabase.auth.getUser()
 
   const progressMap: Record<number, number> = {}
+  let inWatchlist = false
   if (user) {
-    const { data: rows } = await supabase
-      .from('watch_progress')
-      .select('episode, progress')
-      .eq('user_id', user.id)
-      .eq('media_type', 'tv')
-      .eq('tmdb_id', show.id)
-      .eq('season', seasonNum)
+    const [{ data: rows }, { data: wl }] = await Promise.all([
+      supabase
+        .from('watch_progress')
+        .select('episode, progress')
+        .eq('user_id', user.id)
+        .eq('media_type', 'tv')
+        .eq('tmdb_id', show.id)
+        .eq('season', seasonNum),
+      supabase
+        .from('watchlist')
+        .select('tmdb_id')
+        .eq('user_id', user.id)
+        .eq('tmdb_id', show.id)
+        .eq('media_type', 'tv')
+        .maybeSingle(),
+    ])
     rows?.forEach(r => { if (r.episode != null) progressMap[r.episode] = r.progress })
+    inWatchlist = !!wl
   }
 
   const backdrop = show.backdrop_path ? `${TMDB_IMAGE_BASE}/original${show.backdrop_path}` : null
@@ -94,7 +105,7 @@ export default async function TVPage({
                   tmdbId={show.id}
                   title={show.name}
                   posterPath={show.poster_path}
-                  initialInWatchlist={false}
+                  initialInWatchlist={inWatchlist}
                 />
               )}
             </div>
